@@ -1,10 +1,10 @@
 {
   "name": "chat-pqp",
   "version": "1.0.0",
-  "description": "Um chat criado para aprimorar meus conhecimentos com bacn endk-end no node",
+  "description": "Um chat criado para aprimorar meus conhecimentos com back-end no node",
   "main": "index.js",
   "scripts": {
-    "build-css": "npx tailwindcss -i ./input.css -o ./public/css/styles.css --watch",
+    "build-css": "npx tailwindcss -i ./public/input.css -o ./public/css/styles.css --watch",
     "start-server": "nodemon index.js"
   },
   "repository": {
