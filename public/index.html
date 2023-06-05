@@ -5,20 +5,45 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
 	<script src="https://cdn.tailwindcss.com"></script>
+
+	<style type="text/tailwindcss">
+		@layer utilities {
+	    	.msg-toast {
+	    		
+	    	}
+    	}
+	</style>
+
 	<title>Chat PQP</title>
 </head>
 <body>
-	<div class="w-full h-screen bg-neutral-800">
-		<header>
-			<h1 class="text-red-500">Chat PQP</h1>
+	<div class="w-full flex flex-col h-screen bg-neutral-800">
+		<header class="w-full p-3 bg-neutral-900 border-b-2 border-green-900">
+			<h1 class="text-white font-bold uppercase text-xl">Chat PQP</h1>
 		</header>
-		<div>
-			
+		<div class="w-full h-full p-2 flex flex-col justify-start items-start">
+			<div class="relative w-96 self-end">
+				<p class="text-zinc-500 text-right">Você</p>
+				<div class="p-1 my-1 rounded bg-green-800">
+					<p class="text-white">Iae mano!</p>
+				</div>
+				<!-- <div class="absolute -right-5 -bottom-3 w-20 h-20 bg-green-800 msg-toast">
+					
+				</div> -->
+			</div>
+			<div class="w-96">
+				<p class="text-zinc-500">Estranho</p>
+				<div class="p-1 my-1 rounded bg-red-800">
+					<p class="text-white">Manda a braba parceiro!</p>
+				</div>
+			</div>
 		</div>
-		<div>
+		<div class="w-full border-t-2 border-green-900">
 			<form>
-				<input name="user-msg" placeholder="Diga 'Oi!'">
-				<button type="submit">Enviar</button>
+				<div class="w-full flex">
+					<input class="w-full p-2 py-3" name="user-msg" placeholder="Diga 'Oi!'">
+					<button class="px-6 py-1 text-lg text-white bg-green-700" type="submit">Enviar</button>
+				</div>
 			</form>
 		</div>
 	</div>
