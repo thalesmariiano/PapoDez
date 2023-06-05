@@ -1,1 +1,2 @@
-alert("Oi")
+
+const socket = io()
