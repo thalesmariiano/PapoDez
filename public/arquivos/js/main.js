@@ -53,7 +53,7 @@ form.addEventListener('submit', event => {
 	if(input.value){
 		if(socket.emit('chat-msg', input.value)){
 			chatContainer.innerHTML += `
-				<div class="relative w-96 self-end">
+				<div class="w-96 self-end" data-user="you" data-msg="msg">
 					<p class="text-zinc-500 text-right">Você</p>
 					<div class="p-1 my-1 rounded bg-green-800">
 						<p class="text-white">${input.value}</p>
@@ -67,7 +67,7 @@ form.addEventListener('submit', event => {
 
 socket.on('chat-msg', msg => {
 	chatContainer.innerHTML += `
-		<div class="w-96">
+		<div class="w-96" data-user="strange" data-msg="msg">
 			<p class="text-zinc-500">Estranho</p>
 			<div class="p-1 my-1 rounded bg-red-800">
 				<p class="text-white">${msg}</p>
