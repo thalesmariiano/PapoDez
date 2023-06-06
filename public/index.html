@@ -17,20 +17,32 @@
 	<title>Chat PQP</title>
 </head>
 <body>
-	<div class="w-full flex flex-col h-screen bg-neutral-800">
-		<header class="w-full p-3 bg-neutral-900 border-b-2 border-green-900">
-			<h1 class="text-white font-bold uppercase text-xl">Chat PQP</h1>
-		</header>
-		<div id="chat-container" class="w-full h-full p-2 flex flex-col justify-start items-start overflow-y-scroll">
-			
-		</div>
-		<div class="w-full border-t-2 border-green-900">
-			<form>
-				<div class="w-full flex">
-					<input class="w-full p-2 py-3" name="user-msg" placeholder="Diga 'Oi!'" autocomplete="off">
-					<button class="px-6 py-1 text-lg text-white bg-green-700" type="submit">Enviar</button>
+	<div class="w-full flex h-screen bg-neutral-800">
+		<div class="w-96 flex flex-col border-r-2 border-green-900 bg-neutral-900">
+			<div class="p-3 w-full border-b-2 border-green-900">
+				<div class="p-3 w-7 h-7 bg-neutral-800 rounded-full">
+					
 				</div>
-			</form>
+			</div>
+			<div class="w-full h-full">
+				
+			</div>
+		</div>
+		<div class="w-full h-full flex flex-col">
+			<header class="w-full p-3 bg-neutral-900 border-b-2 border-green-900">
+				<h1 class="text-white font-bold uppercase text-xl">Chat PQP</h1>
+			</header>
+			<div id="chat-container" class="w-full h-full p-2 flex flex-col justify-start items-start overflow-y-scroll">
+				
+			</div>
+			<div class="w-full border-t-2 border-green-900">
+				<form>
+					<div class="w-full flex">
+						<input class="w-full p-2 py-3" name="user-msg" placeholder="Diga 'Oi!'" autocomplete="off">
+						<button class="px-6 py-1 text-lg text-white bg-green-700" type="submit">Enviar</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 
