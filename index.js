@@ -14,9 +14,13 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', socket => {
-	console.log("Um usuario conectou!")
-	socket.on("chat-msg", msg => {
-		io.emit('chat-msg', msg)
+	socket.broadcast.emit('user-on', socket.id)
+	socket.on('disconnect', () => {
+		socket.broadcast.emit('user-off', socket.id)
+	})
+
+	socket.on('chat-msg', msg => {
+		socket.broadcast.emit('chat-msg', msg)
 	})
 })
 
