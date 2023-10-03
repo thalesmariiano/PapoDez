@@ -15,15 +15,18 @@ app.get('/', (req, res) => {
 
 const users_online = []
 
-const findUser = userId => users_online.findIndex(id => id == userId)
+const findUser = userId => users_online.findIndex(user => user.id == userId)
 const removeUser = userId => users_online.splice(userId, 1)
 
 io.on('connection', socket => {
 	socket.join('sala-1')
 
-	users_online.push(socket.id)
+	socket.emit('start-config', socket.id)
 
-	io.emit('users-online', users_online)
+	socket.on('user-config', user => {
+		users_online.push(user)
+		io.emit('users-online', users_online)
+	})
 
 	socket.on('chat-msg', msg => {
 		socket.broadcast.emit('chat-msg', msg)
