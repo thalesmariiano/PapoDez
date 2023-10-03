@@ -92,6 +92,9 @@ form.addEventListener('submit', event => {
 				</div>
 			`
 			input.value = ''
+
+			// Scroll alinhar com mensagem mais recente
+			chatContainer.scrollTo(0, chatContainer.scrollHeight)
 		}
 	}
 })
@@ -106,4 +109,7 @@ socket.on('chat-msg', msg => {
 			</div>
 		</div>
 	`
+
+	// Scroll alinhar com mensagem mais recente
+	chatContainer.scrollTo(0, chatContainer.scrollHeight)
 })
