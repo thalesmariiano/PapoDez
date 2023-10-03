@@ -85,9 +85,14 @@ form.addEventListener('submit', event => {
 		if(socket.emit('chat-msg', msg)){
 			chatContainer.innerHTML += `
 				<div class="max-w-sm min-w-10 self-end" data-user="you" data-msg="msg">
-					<p class="text-zinc-500 text-right">Você - <small class="text-zinc-600">${msg.time}</small></p>
-					<div class="p-1 my-1 rounded bg-green-800">
-						<p class="text-white">${msg.message}</p>
+					<p class="text-zinc-500 text-right">Você</p>
+					<div class="p-1 my-1 rounded bg-green-800 flex items-center gap-x-2">
+						<div>
+							<p class="text-white break-words text-left">${msg.message}</p>
+						</div>
+						<div class="self-end">
+							<small class="text-neutral-300 text-[10px]">${msg.time}</small>
+						</div>
 					</div>
 				</div>
 			`
@@ -103,9 +108,14 @@ socket.on('chat-msg', msg => {
 	const userName = msg.user.name ? msg.user.name : 'Anônimo'
 	chatContainer.innerHTML += `
 		<div class="max-w-sm min-w-10" data-user="strange" data-msg="msg">
-			<p class="text-zinc-500"><small class="text-zinc-600">${msg.time}</small> - ${userName}</p>
-			<div class="p-1 my-1 rounded bg-red-800">
-				<p class="text-white">${msg.message}</p>
+			<p class="text-zinc-500">${userName}</p>
+			<div class="p-1 my-1 rounded bg-red-800 flex items-center gap-x-2">
+				<div class="self-end">
+					<small class="text-neutral-300 text-[10px]">${msg.time}</small>
+				</div>
+				<div>
+					<p class="text-white break-words text-left">${msg.message}</p>
+				</div>
 			</div>
 		</div>
 	`
