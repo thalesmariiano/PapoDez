@@ -51,12 +51,21 @@ form.addEventListener('submit', event => {
 	event.preventDefault()
 	
 	if(input.value){
-		if(socket.emit('chat-msg', input.value)){
+		const data = new Date()
+		const horas = data.getHours()
+		const minutos = data.getMinutes()
+
+		const msg = {
+			mensagem: input.value,
+			hora_enviada: `${horas}:${minutos}`
+		}
+
+		if(socket.emit('chat-msg', msg)){
 			chatContainer.innerHTML += `
 				<div class="max-w-sm min-w-10 self-end" data-user="you" data-msg="msg">
-					<p class="text-zinc-500 text-right">Você</p>
+					<p class="text-zinc-500 text-right">Você - <small class="text-zinc-600">${msg.hora_enviada}</small></p>
 					<div class="p-1 my-1 rounded bg-green-800">
-						<p class="text-white">${input.value}</p>
+						<p class="text-white">${msg.mensagem}</p>
 					</div>
 				</div>
 			`
@@ -68,9 +77,9 @@ form.addEventListener('submit', event => {
 socket.on('chat-msg', msg => {
 	chatContainer.innerHTML += `
 		<div class="max-w-sm min-w-10" data-user="strange" data-msg="msg">
-			<p class="text-zinc-500">Estranho</p>
+			<p class="text-zinc-500"><small class="text-zinc-600">${msg.hora_enviada}</small> - Estranho</p>
 			<div class="p-1 my-1 rounded bg-red-800">
-				<p class="text-white">${msg}</p>
+				<p class="text-white">${msg.mensagem}</p>
 			</div>
 		</div>
 	`
