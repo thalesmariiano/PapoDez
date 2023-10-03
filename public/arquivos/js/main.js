@@ -5,47 +5,57 @@ const form = document.querySelector('form')
 const input = document.querySelector('[name=user-msg]')
 const chatContainer = document.querySelector('#chat-container')
 
-socket.on('connect', () => {
-	chatContainer.innerHTML += `
-		<div class="w-full text-center">
-			<p class="text-zinc-500 text-sm">
-				<span class="text-zinc-600">
-					Você
-				</span>
-				conectou.
-			</p>	
-		</div>
+const usersList = document.querySelector('#users-list')
+
+// socket.on('connect', (test) => {
+// 	chatContainer.innerHTML += `
+// 		<div class="w-full text-center">
+// 			<p class="text-zinc-500 text-sm">
+// 				<span class="text-zinc-600">
+// 					Você
+// 				</span>
+// 				conectou.
+// 			</p>	
+// 		</div>
 		
-	`
+// 	`
+// })
+
+// socket.on('user-on', userId => {
+// 	chatContainer.innerHTML += `
+// 		<div class="w-full text-center">
+// 			<p class="text-zinc-500 text-sm">Usuário
+// 				<span class="text-zinc-600">
+// 					${userId}
+// 				</span>
+// 				conectado.
+// 			</p>	
+// 		</div>
+		
+// 	`
+// })
+
+socket.on('users-online', users => {
+	usersList.innerHTML = ' '
+
+	users.forEach(user => {
+		usersList.innerHTML += `<li class="text-zinc-300 px-2 py-1"><span class="text-zinc-400">User:</span> ${user}</li>`
+	})
 })
 
-socket.on('user-on', userId => {
-	chatContainer.innerHTML += `
-		<div class="w-full text-center">
-			<p class="text-zinc-500 text-sm">Usuário
-				<span class="text-zinc-600">
-					${userId}
-				</span>
-				conectado.
-			</p>	
-		</div>
+// socket.on('user-off', userId => {
+// 	chatContainer.innerHTML += `
+// 		<div class="w-full text-center">
+// 			<p class="text-zinc-500 text-sm">Usuário
+// 				<span class="text-zinc-600">
+// 					${userId}
+// 				</span>
+// 				desconectado.
+// 			</p>
+// 		</div>
 		
-	`
-})
-
-socket.on('user-off', userId => {
-	chatContainer.innerHTML += `
-		<div class="w-full text-center">
-			<p class="text-zinc-500 text-sm">Usuário
-				<span class="text-zinc-600">
-					${userId}
-				</span>
-				desconectado.
-			</p>
-		</div>
-		
-	`
-})
+// 	`
+// })
 
 form.addEventListener('submit', event => {
 	event.preventDefault()

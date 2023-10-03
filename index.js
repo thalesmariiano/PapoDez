@@ -13,15 +13,29 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html')
 })
 
+const users_online = []
+
+const findUser = userId => users_online.findIndex(id => id == userId)
+const removeUser = userId => users_online.splice(userId, 1)
+
 io.on('connection', socket => {
-	socket.broadcast.emit('user-on', socket.id)
-	socket.on('disconnect', () => {
-		socket.broadcast.emit('user-off', socket.id)
-	})
+	socket.join('sala-1')
+
+	users_online.push(socket.id)
+
+	io.emit('users-online', users_online)
 
 	socket.on('chat-msg', msg => {
 		socket.broadcast.emit('chat-msg', msg)
 	})
+
+	socket.on('disconnect', () => {
+		const user = findUser(socket.id)
+		removeUser(user)
+
+		socket.broadcast.emit('users-online', users_online)
+	})
+
 })
 
 server.listen(port, () => {
