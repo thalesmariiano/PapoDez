@@ -1,5 +1,5 @@
 {
-  "name": "chat-pqp",
+  "name": "PapoDez",
   "version": "1.0.0",
   "description": "Um chat criado para aprimorar meus conhecimentos com back-end no node",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thalesmariiano/chat-pqp.git"
+    "url": "git+https://github.com/thalesmariiano/PapoDez.git"
   },
   "author": "Thales Mariano",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/thalesmariiano/chat-pqp/issues"
+    "url": "https://github.com/thalesmariiano/PapoDez/issues"
   },
-  "homepage": "https://github.com/thalesmariiano/chat-pqp#readme",
+  "homepage": "https://github.com/thalesmariiano/PapoDez#readme",
   "dependencies": {
     "express": "^4.18.2",
     "nodemon": "^2.0.22",
