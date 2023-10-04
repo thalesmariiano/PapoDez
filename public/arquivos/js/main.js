@@ -46,10 +46,13 @@ socket.on('users-online', users => {
 			`
 		}else{
 			meContainer.innerHTML = `
-				<p class="text-zinc-300 px-2 py-1 bg-neutral-950">
+			<div class="px-2 py-4 bg-green-950 border-b-2 border-green-900">
+				<p class="text-zinc-300">
 					<span class="text-zinc-400">Você:</span>
 					${u.name ? u.name : u.id}
-				</p>`
+				</p>
+			</div>
+			`
 		}
 	})
 })
