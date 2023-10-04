@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.get('/chat', (req, res) => {
 	res.sendFile(__dirname + '/public/chat.html')
-	userName = req.query.name
+	userName = req.query.name ? req.query.name : `anonimo${Math.floor(Math.random() * 100)}`
 })
 
 const users_online = []
