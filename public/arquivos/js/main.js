@@ -5,6 +5,7 @@ const form = document.querySelector('form')
 const input = document.querySelector('[name=user-msg]')
 const chatContainer = document.querySelector('#chat-container')
 
+const usersCount = document.querySelector('#users-count')
 const meContainer = document.querySelector('#me-container')
 const usersList = document.querySelector('#users-list')
 
@@ -33,8 +34,10 @@ socket.on('start-config', socketId => {
 // })
 
 socket.on('users-online', users => {
-	usersList.innerHTML = ' '
 
+	usersCount.innerHTML = `${users.length} online`
+
+	usersList.innerHTML = ' '
 	users.forEach(u => {
 		if(user.id !== u.id){
 			const userName = u.name ? u.name : u.id
