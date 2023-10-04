@@ -8,18 +8,36 @@
 
 	<style type="text/tailwindcss">
 		@layer utilities {
-	    	.msg-toast {
-	    		
-	    	}
+	    	::-webkit-scrollbar {
+				width: 14px;
+				background-color: #252525;
+			}
+
+			::-webkit-scrollbar-track {
+				box-shadow: inset 0px 0px 5px rgba(0, 0, 0, .5);
+			}
+
+			::-webkit-scrollbar-thumb {
+				background-color: #303030;
+				border-radius: 10px;
+			}
+
+			::-webkit-scrollbar-thumb:hover {
+				background-color: #454545;
+			}
+
+			.aside-shadow {
+				box-shadow: 3px 0px 5px rgba(0,0,0,.2)
+			}
     	}
 	</style>
 
-	<title>Popodez</title>
+	<title>Papodez</title>
 </head>
 <body>
-	<div class="w-full flex h-screen bg-neutral-800">
-		<div class="w-96 flex flex-col border-r-2 border-green-900 bg-neutral-900">
-			<div class="p-3 w-full border-b-2 border-green-900">
+	<div class="w-full h-screen flex justify-start bg-neutral-800">
+		<aside class="w-[25rem] h-full flex flex-col border-r-2 border-green-900 bg-neutral-900 aside-shadow">
+			<div class="w-full h-16 flex items-center px-3 border-b-2 border-green-900">
 				<h1 class="font-bold text-white text-2xl">Papodez</h1>
 			</div>
 			<div class="w-full h-full">
@@ -28,18 +46,18 @@
 					
 				</ul>
 			</div>
-		</div>
-		<div class="w-full h-full flex flex-col">
-			<header class="w-full p-3 bg-neutral-900 border-b-2 border-green-900">
-				<h1 class="text-white font-bold uppercase text-lg">Chat 1</h1>
+		</aside>
+		<div class="w-full h-full flex flex-col justify-start items-center">
+			<header class="w-full h-16 flex items-center py-3.5 px-3 border-b-2 border-green-900 bg-neutral-900 shadow-md">
+				<h1 class="text-white font-bold text-lg">Chat 1</h1>
 			</header>
 			<div id="chat-container" class="w-full h-full p-2 flex flex-col justify-start items-start overflow-y-scroll scroll-smooth">
 				
 			</div>
-			<div class="w-full border-t-2 border-green-900">
-				<form>
+			<div class="w-full">
+				<form action="/" method="POST">
 					<div class="w-full flex">
-						<input class="w-full p-2 py-3" name="user-msg" placeholder="Diga 'Oi!'" autocomplete="off">
+						<input class="w-full p-2 py-3 border-y-2 border-green-900" name="user-msg" placeholder="Diga 'Oi!'" autocomplete="off">
 						<button class="px-6 py-1 text-lg text-white bg-green-700" type="submit">Enviar</button>
 					</div>
 				</form>
