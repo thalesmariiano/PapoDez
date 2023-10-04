@@ -13,6 +13,11 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html')
 })
 
+app.get('/chat', (req, res) => {
+	res.sendFile(__dirname + '/public/chat.html')
+})
+
+
 const users_online = []
 
 const findUser = userId => users_online.findIndex(user => user.id == userId)
