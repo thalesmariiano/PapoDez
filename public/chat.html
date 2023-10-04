@@ -65,7 +65,21 @@
 		</div>
 	</div>
 
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="/static/js/main.js"></script>
+	<div id="dialog-container" class="w-full h-full flex justify-center items-center fixed top-0 left-0 bg-neutral-950/75">
+		<div class="w-96 p-2 bg-neutral-900 border-2 border-green-900 rounded">
+			<div class="text-center space-y-5">
+				<h1 class="font-bold text-white text-2xl">Deseja por um nick?</h1>
+			
+				<input id="user-nick" class="pl-3 pr-5 py-1 rounded bg-transparent border-2 border-green-800 text-neutral-400 focus:text-white" type="text" name="name" placeholder="Ex: thales gamer">
+				<div class="space-x-3">
+					<button id="done-button" class="px-5 py-0.5 bg-blue-600 text-white rounded hover:bg-blue-700">Pronto</button>
+					<button id="close-dialog-button" class="px-5 py-0.5 bg-red-600 text-white rounded hover:bg-red-700">Não quero</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <script src="/socket.io/socket.io.js"></script>
+	<script src="/static/js/main.js"></script> -->
 </body>
 </html>
