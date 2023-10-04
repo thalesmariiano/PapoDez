@@ -7,6 +7,8 @@ const server = http.createServer(app)
 const { Server } = require('Socket.io')
 const io = new Server(server)
 
+var userName;
+
 app.use("/static", express.static('public/arquivos'))
 
 app.get('/', (req, res) => {
@@ -15,8 +17,8 @@ app.get('/', (req, res) => {
 
 app.get('/chat', (req, res) => {
 	res.sendFile(__dirname + '/public/chat.html')
+	userName = req.query.name
 })
-
 
 const users_online = []
 
@@ -29,6 +31,7 @@ io.on('connection', socket => {
 	socket.emit('start-config', socket.id)
 
 	socket.on('user-config', user => {
+		user.name = userName
 		users_online.push(user)
 		io.emit('users-online', users_online)
 	})

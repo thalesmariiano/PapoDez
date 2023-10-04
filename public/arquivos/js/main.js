@@ -11,7 +11,7 @@ const usersList = document.querySelector('#users-list')
 
 const user = {
 	id: null,
-	name: prompt('Qual o seu nome?')
+	name: ''
 }
 
 socket.on('start-config', socketId => {
