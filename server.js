@@ -8,6 +8,10 @@ const { Server } = require('Socket.io')
 const io = new Server(server)
 
 var userName;
+const users_online = []
+
+const findUser = userId => users_online.findIndex(user => user.id == userId)
+const removeUser = userId => users_online.splice(userId, 1)
 
 app.use("/static", express.static('public/arquivos'))
 
@@ -20,20 +24,18 @@ app.get('/chat', (req, res) => {
 	userName = req.query.name ? req.query.name : `anonimo${Math.floor(Math.random() * 100)}`
 })
 
-const users_online = []
+const chatNamespace = io.of('/chat')
 
-const findUser = userId => users_online.findIndex(user => user.id == userId)
-const removeUser = userId => users_online.splice(userId, 1)
-
-io.on('connection', socket => {
-	socket.join('sala-1')
+chatNamespace.on('connection', (socket) => {
+	// socket.join('room1')
+	console.log(socket)
 
 	socket.emit('start-config', socket.id)
 
 	socket.on('user-config', user => {
 		user.name = userName
 		users_online.push(user)
-		io.emit('users-online', users_online)
+		chatNamespace.emit('users-online', users_online)
 	})
 
 	socket.on('chat-msg', msg => {
@@ -44,7 +46,7 @@ io.on('connection', socket => {
 		const user = findUser(socket.id)
 		removeUser(user)
 
-		socket.broadcast.emit('users-online', users_online)
+		chatNamespace.emit('users-online', users_online)
 	})
 
 })

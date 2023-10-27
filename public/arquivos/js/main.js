@@ -1,5 +1,5 @@
 
-const socket = io()
+const socket = io('/chat')
 
 const form = document.querySelector('form')
 const input = document.querySelector('[name=user-msg]')
@@ -34,7 +34,6 @@ socket.on('start-config', socketId => {
 // })
 
 socket.on('users-online', users => {
-
 	usersCount.innerHTML = `${users.length} online`
 
 	usersList.innerHTML = ' '
