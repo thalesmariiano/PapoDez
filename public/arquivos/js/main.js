@@ -7,16 +7,51 @@ const chatContainer = document.querySelector('#chat-container')
 
 const usersCount = document.querySelector('#users-count')
 const meContainer = document.querySelector('#me-container')
-const usersList = document.querySelector('#users-list')
+const chatsList = document.querySelector('#chats-list')
 
-const user = {
-	id: null,
-	name: ''
+let chat_id = ''
+
+socket.on('connected', chats => {
+	chats.forEach(chat => {
+		chatsList.innerHTML += 
+		`	
+		<li>
+			<div class="chat chat-default" onClick="enterChat('${chat.id}')" data-chat="${chat.id}">
+				<div class="flex items-center">
+					<div class="flex items-center">
+						<img class="mr-2" src="/static/images/icons/chat-dots.svg"/>
+						<p class="text-zinc-300">${chat.name}</p>
+					</div>
+					<small class="text-neutral-400 ml-1">- ${chat.users_online.length} online</small>
+				</div>
+				<button>
+					<img src="static/images/icons/three-dots-vertical.svg"/>
+				</button>
+			</div>
+		</li>
+		`
+	})
+})
+
+function enterChat(chatId){
+	if(chat_id !== chatId){
+		socket.emit('enter-chat', {chatId, chat_id})
+		chat_id = chatId
+
+		document.querySelectorAll('.chat').forEach(element => {
+			if(element.dataset.chat == `${chatId}`){
+				element.classList.add('chat-active')
+				element.classList.remove('chat-default')
+			}else{
+				element.classList.remove('chat-active')
+				element.classList.add('chat-default')
+			}
+		})
+	}
 }
 
-socket.on('start-config', socketId => {
-	user.id = socketId
-	socket.emit('user-config', user)
+socket.on('chat-info', info => {
+	document.querySelector('#chat-name').innerHTML = info.name
 })
 
 // socket.on('user-on', userId => {
@@ -33,31 +68,32 @@ socket.on('start-config', socketId => {
 // 	`
 // })
 
-socket.on('users-online', users => {
-	usersCount.innerHTML = `${users.length} online`
+// socket.on('users-online', users => {
+// 	usersCount.innerHTML = `${users.length} online`
+// })
 
-	usersList.innerHTML = ' '
-	users.forEach(u => {
-		if(user.id !== u.id){
-			const userName = u.name ? u.name : u.id
-			usersList.innerHTML += `
-				<li class="text-zinc-300 px-2 py-1">
-					<span class="text-zinc-400">User:</span>
-					${userName}
-				</li>
-			`
-		}else{
-			meContainer.innerHTML = `
-			<div class="px-2 py-4 bg-green-950 border-b-2 border-green-900">
-				<p class="text-zinc-300">
-					<span class="text-zinc-400">Você:</span>
-					${u.name ? u.name : u.id}
-				</p>
-			</div>
-			`
-		}
-	})
-})
+// 	usersList.innerHTML = ' '
+// 	users.forEach(u => {
+// 		if(user.id !== u.id){
+// 			const userName = u.name ? u.name : u.id
+// 			usersList.innerHTML += `
+// 				<li class="text-zinc-300 px-2 py-1">
+// 					<span class="text-zinc-400">User:</span>
+// 					${userName}
+// 				</li>
+// 			`
+// 		}else{
+// 			meContainer.innerHTML = `
+// 			<div class="px-2 py-4 bg-green-950 border-b-2 border-green-900">
+// 				<p class="text-zinc-300">
+// 					<span class="text-zinc-400">Você:</span>
+// 					${u.name ? u.name : u.id}
+// 				</p>
+// 			</div>
+// 			`
+// 		}
+// 	})
+// })
 
 // socket.on('user-off', userId => {
 // 	chatContainer.innerHTML += `
@@ -82,7 +118,6 @@ form.addEventListener('submit', event => {
 		const minutes = date.getMinutes()
 
 		const msg = {
-			user,
 			message: input.value,
 			time: `${hours}:${minutes}`
 		}
@@ -110,10 +145,9 @@ form.addEventListener('submit', event => {
 })
 
 socket.on('chat-msg', msg => {
-	const userName = msg.user.name ? msg.user.name : 'Anônimo'
 	chatContainer.innerHTML += `
 		<div class="max-w-sm min-w-10" data-user="strange" data-msg="msg">
-			<p class="text-zinc-500">${userName}</p>
+			<p class="text-zinc-500">Anônimo</p>
 			<div class="p-1 my-1 rounded bg-red-800 flex items-center gap-x-2">
 				<div class="self-end">
 					<small class="text-neutral-300 text-[10px]">${msg.time}</small>
