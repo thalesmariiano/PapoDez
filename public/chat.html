@@ -29,35 +29,47 @@
 			.aside-shadow {
 				box-shadow: 3px 0px 5px rgba(0,0,0,.2)
 			}
+
+			.chat-default {
+				@apply flex justify-between items-center cursor-pointer p-4 border-b-2 border-green-900 bg-green-900/[.2]
+			}
+
+			.chat-active {
+				@apply flex justify-between items-center cursor-pointer p-4 border-b-2 border-green-900 bg-green-500/[.2]
+			}
     	}
 	</style>
 
 	<title>PapoDez</title>
 </head>
 <body>
-	<div class="w-full h-screen flex justify-start bg-neutral-800">
-		<aside class="w-[25rem] h-full md:flex flex-col border-r-2 border-green-900 bg-neutral-900 aside-shadow hidden">
+	<div class="w-full h-screen flex gap-x-5 justify-start bg-neutral-800 p-0 md:p-5">
+		<aside class="w-[25rem] h-full md:flex flex-col border-2 border-green-900 bg-neutral-900 aside-shadow rounded hidden">
 			<div class="w-full h-16 flex items-center px-3 border-b-2 border-green-900">
 				<h1 class="font-bold text-white text-2xl">PapoDez</h1>
 			</div>
 			<div class="w-full h-full">
 				<div id="me-container"></div>
-				<ul id="users-list">
-					
+				<ul id="chats-list">
+
 				</ul>
 			</div>
 		</aside>
 		<div class="w-full h-full flex flex-col justify-start items-center">
-			<header class="w-full h-16 flex items-center py-3.5 px-3 border-b-2 border-green-900 bg-neutral-900 shadow-md">
-				<h1 class="text-white font-bold text-lg">Chat 1 | <span id="users-count" class="text-green-500 text-xs font-normal">0 online</span></h1>
+			<header class="w-full flex gap-x-2 h-16 flex items-center py-3.5 px-3 border-2 border-green-900 bg-neutral-900 shadow-md rounded-t">
+				<h1 id="chat-name" class="text-white font-bold text-lg">Chat 1 </h1>
+				<span class="text-white">|</span>
+				<span id="users-count" class="text-green-500 text-xs font-normal">0 online</span>
 			</header>
-			<div id="chat-container" class="w-full h-full p-2 flex flex-col justify-start items-start overflow-y-scroll scroll-smooth">
+
+			<div id="chat-container" class="w-full h-full border-x-2 border-green-900 p-2 flex flex-col justify-start items-start overflow-y-scroll scroll-smooth">
 				
 			</div>
+
 			<div class="w-full">
 				<form action="/" method="POST">
-					<div class="w-full flex">
-						<input class="w-full p-2 py-3 border-y-2 border-green-900" name="user-msg" placeholder="Diga 'Oi!'" autocomplete="off">
+					<div class="w-full flex overflow-hidden rounded-b">
+						<input class="w-full p-2 py-3 border-2 border-green-900 bg-neutral-700 text-white" name="user-msg" placeholder="Diga 'Oi!'" autocomplete="off">
 						<button class="px-6 py-1 text-lg text-white bg-green-700" type="submit">Enviar</button>
 					</div>
 				</form>
