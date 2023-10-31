@@ -9,30 +9,18 @@
 	<title>PapoDez</title>
 </head>
 <body>
-	<div class="w-full h-screen flex justify-center items-center bg-neutral-900">
-		<div class="text-center">
-			<div class="mb-16 text-center">
-				<h1 class="font-bold text-white text-7xl">PapoDez</h1>
-				<p class="text-white font-mono text-sm mt-4">Um chat online em desenvolvimento</p>
+	<div class="w-full h-screen flex flex-col justify-center items-center bg-neutral-900">
+		<h1 class="text-white font-bold text-7xl">PAPO<span class="text-green-800">DEZ</span></h1>
+		<form>
+			<div class="space-x-3 space-y-3 text-center mt-10">
+				<input class="bg-neutral-500 placeholder:text-neutral-700 placeholder:italic text-white border border-white pl-2 pr-5 py-1 rounded" type="text" name="nickname" placeholder="Seu nome/apelido" autocomplete="off">
+				<button class="px-12 py-1 text-lg text-white font-semibold bg-green-800 rounded hover:bg-green-700 transition-all">Entrar</button>
 			</div>
-			<button id="enter-chat-button" class="px-5 py-2 text-lg bg-green-950 hover:bg-green-900 transition-all text-white rounded">Entrar no chat</button>
+		</form>
+		<div class="mt-5 text-center">
+			<p class="text-neutral-500 text-sm">Este é um projeto em desenvolvimento. <br> Encontrou algum bug? <a class="underline text-neutral-400" href="#">Reporte aqui!</a></p>
+			<p class="text-neutral-500 text-sm">NÃO compartilhe informações pessoais!</p>
 		</div>
 	</div>
-
-	<div id="dialog-container" class="w-full h-full flex justify-center items-center fixed top-0 left-0 bg-neutral-950/75 hidden">
-		<div class="w-96 p-2 bg-neutral-900 border-2 border-green-900 rounded">
-			<form action="/chat" method="GET" class="text-center space-y-5">
-				<h1 class="font-bold text-white text-2xl">Deseja por um nick?</h1>
-			
-				<input id="user-nick" class="pl-3 pr-5 py-1 rounded bg-transparent border-2 border-green-800 text-neutral-400 focus:text-white" type="text" name="name" placeholder="Ex: thales gamer">
-				<div class="space-x-3">
-					<button id="done-button" class="px-5 py-0.5 bg-blue-600 text-white rounded hover:bg-blue-700">Pronto</button>
-					<button id="close-dialog-button" class="px-5 py-0.5 bg-red-600 text-white rounded hover:bg-red-700">Não quero</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	
-	<script src="static/js/home.js"></script>
 </body>
 </html>
