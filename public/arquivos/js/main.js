@@ -26,23 +26,28 @@ let chat_id = ''
 
 socket.on('connected', chats => {
 	chats.forEach(chat => {
-		chatsList.innerHTML += 
-		`	
-		<li>
-			<div class="chat chat-default" onClick="enterChat('${chat.id}')" data-chat="${chat.id}">
+		const li = document.createElement('li')
+		const divContainer = document.createElement('div')
+		divContainer.classList.add('chat', 'chat-default')
+		divContainer.dataset.chat = chat.id
+
+		divContainer.innerHTML = `
+			<div class="flex items-center">
 				<div class="flex items-center">
-					<div class="flex items-center">
-						<img class="mr-2" src="/static/images/icons/chat-dots.svg"/>
-						<p class="text-zinc-300">${chat.name}</p>
-					</div>
-					<small class="text-neutral-400 ml-1">- ${chat.users_online.length} online</small>
+					<img class="mr-2" src="/static/images/icons/chat-dots.svg"/>
+					<p class="text-zinc-300">${chat.name}</p>
 				</div>
-				<button>
-					<img src="static/images/icons/three-dots-vertical.svg"/>
-				</button>
+				<!-- <small class="text-neutral-400 ml-1">- ${chat.users_online.length} online</small> -->
 			</div>
-		</li>
+			<!-- <button>
+				<img src="static/images/icons/three-dots-vertical.svg"/>
+			</button> -->
 		`
+
+		divContainer.addEventListener('click', () => enterChat(chat.id))
+
+		li.appendChild(divContainer)
+		chatsList.appendChild(li)
 	})
 })
 
@@ -81,9 +86,9 @@ socket.on('chat-info', info => {
 // 	`
 // })
 
-// socket.on('users-online', users => {
-// 	usersCount.innerHTML = `${users.length} online`
-// })
+socket.on('users-online', users => {
+	usersCount.innerHTML = `${users.length} online`
+})
 
 // 	usersList.innerHTML = ' '
 // 	users.forEach(u => {
