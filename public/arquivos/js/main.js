@@ -1,3 +1,4 @@
+import { showUI, removeUI } from './animation.js'
 
 const socket = io('/chat')
 
@@ -8,6 +9,18 @@ const chatContainer = document.querySelector('#chat-container')
 const usersCount = document.querySelector('#users-count')
 const meContainer = document.querySelector('#me-container')
 const chatsList = document.querySelector('#chats-list')
+
+const sideMenu = document.querySelector('#side-menu')
+const openSideMenu = document.querySelector('#open-side-menu')
+const closeSideMenu = document.querySelector('#close-side-menu')
+
+openSideMenu.addEventListener('click', () => {
+	showUI(sideMenu, 'animate__fadeInLeft')
+})
+
+closeSideMenu.addEventListener('click', () => {
+	removeUI(sideMenu, 'animate__fadeOutRight')
+})
 
 let chat_id = ''
 
