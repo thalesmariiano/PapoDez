@@ -53,7 +53,7 @@ chatNSP.on('connection', (socket) => {
 		id: socket.id,
 		room: '',
 	})
-	// chatNSP.emit('users-online', users_online)
+	chatNSP.emit('users-online', users_online)
 
 	socket.on('enter-chat', ({chatId, chat_id}) => {
 		const user = users_online[users_online.findIndex(user => user.id == socket.id)]
@@ -81,7 +81,7 @@ chatNSP.on('connection', (socket) => {
 		const user = findUser(socket.id)
 		removeUser(user)
 
-		// chatNSP.emit('users-online', users_online)
+		chatNSP.emit('users-online', users_online)
 	})
 
 })
