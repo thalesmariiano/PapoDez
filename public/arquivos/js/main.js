@@ -15,7 +15,7 @@ const openSideMenu = document.querySelector('#open-side-menu')
 const closeSideMenu = document.querySelector('#close-side-menu')
 
 openSideMenu.addEventListener('click', () => {
-	showUI(sideMenu, 'animate__fadeInLeft')
+	showUI(sideMenu, 'animate__fadeInRight')
 })
 
 closeSideMenu.addEventListener('click', () => {
