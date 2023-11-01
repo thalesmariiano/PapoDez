@@ -65,6 +65,7 @@ function enterChat(chatId){
 				element.classList.add('chat-default')
 			}
 		})
+		chatContainer.innerHTML = ''
 	}
 }
 
