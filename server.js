@@ -2,6 +2,19 @@ import express from 'express'
 import http from "http"
 import { Server } from 'Socket.io'
 
+// import connection from './connection.js'
+
+// const getMessagens = msgsCount => {
+// 	connection.query(
+// 		'SELECT * FROM `bate-papo-geral` LIMIT ' + msgsCount,
+// 		(err, results, fields) => {
+// 			console.log(results)
+// 		}
+// 	)
+// }
+
+// // getMessagens(1)
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 
