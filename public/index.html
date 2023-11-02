@@ -11,12 +11,17 @@
 <body>
 	<div class="w-full h-screen flex flex-col justify-center items-center bg-neutral-900">
 		<h1 class="text-white font-bold text-7xl">PAPO<span class="text-green-800">DEZ</span></h1>
-		<form>
-			<div class="space-x-3 space-y-3 text-center mt-10">
-				<input class="bg-neutral-500 placeholder:text-neutral-700 placeholder:italic text-white border border-white pl-2 pr-5 py-1 rounded" type="text" name="nickname" placeholder="Seu nome/apelido" autocomplete="off">
-				<button class="px-12 py-1 text-lg text-white font-semibold bg-green-800 rounded hover:bg-green-700 transition-all">Entrar</button>
+		<form action="/" method="POST">
+			<div class="space-y-3 text-center mt-10">
+				<input class="bg-neutral-500 placeholder:text-neutral-700 placeholder:italic text-white border border-white pl-2 pr-5 py-1 rounded" type="text" name="nickname" placeholder="Seu nome/apelido" autocomplete="off"> <br>
+				<input class="bg-neutral-500 placeholder:text-neutral-700 placeholder:italic text-white border border-white pl-2 pr-5 py-1 rounded" type="password" name="password" placeholder="Sua Senha"> <br>
+				<button class="w-full py-1 text-lg text-white font-semibold bg-green-800 border border-green-700 rounded hover:bg-green-700 transition-all">Entrar</button>
 			</div>
 		</form>
+		<div class="my-5 w-80 h-0.5 bg-neutral-700 rounded"></div>
+		<div>
+			<button class="px-5 py-1 text-lg text-neutral-400 font-semibold bg-green-950 border border-green-900 rounded hover:text-white hover:bg-green-700 transition-all">Entrar sem login</button>
+		</div>
 		<div class="mt-5 text-center">
 			<p class="text-neutral-500 text-sm">Este é um projeto em desenvolvimento. <br> Encontrou algum bug? <a class="underline text-neutral-400" href="#">Reporte aqui!</a></p>
 			<p class="text-neutral-500 text-sm">NÃO compartilhe informações pessoais!</p>
