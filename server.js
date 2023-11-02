@@ -1,6 +1,9 @@
 import express from 'express'
 import http from "http"
 import { Server } from 'Socket.io'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import bodyParser from 'body-parser'
 
 // import connection from './connection.js'
 
@@ -15,9 +18,6 @@ import { Server } from 'Socket.io'
 
 // // getMessagens(1)
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -26,23 +26,17 @@ const server = http.createServer(app)
 const io = new Server(server)
 const port = 3072
 
-var userName;
-
 const findUser = userId => users_online.findIndex(user => user.id == userId)
 const removeUser = userId => users_online.splice(userId, 1)
 
-app.use("/static", express.static('public/arquivos'))
-
-app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/public/index.html')
-})
-
-app.get('/chat', (req, res) => {
-	res.sendFile(__dirname + '/public/chat.html')
-	userName = req.query.name ? req.query.name : `anonimo${Math.floor(Math.random() * 100)}`
-})
-
+const chatNSP = io.of('/chat')
 const users_online = []
+
+const user = {
+	id: '',
+	nick: '',
+	room: '',
+}
 
 const chats = [
 	{
@@ -58,25 +52,41 @@ const chats = [
 	},
 ]
 
-const chatNSP = io.of('/chat')
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+app.use("/static", express.static('public/arquivos'))
+
+app.get('/', (req, res) => {
+	res.sendFile(__dirname + '/public/index.html')
+})
+
+app.get('/chat', (req, res) => {
+	if(!user.nick || user.nick == ' ') res.redirect('/')
+
+	res.sendFile(__dirname + '/public/chat.html')
+})
+
+app.post('/', (req, res) => {
+	const { nickname } = req.body
+	user.nick = nickname ? nickname : `Anônimo${Math.floor(Math.random() * 100)}`
+	res.redirect('/chat')
+})
 
 chatNSP.on('connection', (socket) => {
-	socket.emit('connected', chats)
-	users_online.push({
-		id: socket.id,
-		room: '',
-	})
-	chatNSP.emit('users-online', users_online)
+	user.id = socket.id
 
-	socket.on('enter-chat', ({chatId, chat_id}) => {
-		const user = users_online[users_online.findIndex(user => user.id == socket.id)]
-		if(user.room !== chatId){
-			socket.join(chatId)
-			socket.leave(chat_id)
-			user.room = chatId
+	socket.emit('send-chats', chats)
+	socket.emit('send-user', user)
+	users_online.push(user)
 
-			socket.emit('chat-info', chats.find(chat => chat.id == chatId))
-		}
+	socket.on('enter-chat', chat => {
+		const userToEnter = users_online[users_online.findIndex(u => u.id == socket.id)]
+		userToEnter.room = chat.toEnter
+		console.log(userToEnter)
+		socket.join(chat.toEnter)
+		socket.leave(chat.toLeave)
+
+		socket.emit('chat-info', chats.find(chat => chat.id == chat.toEnter))
 	})
 
 	// socket.on('user-config', user => {
@@ -86,8 +96,8 @@ chatNSP.on('connection', (socket) => {
 	// })
 
 	socket.on('chat-msg', msg => {
-		const user = users_online[users_online.findIndex(user => user.id == socket.id)]
-		socket.to(user.room).emit('chat-msg', msg)
+		const userr = users_online[users_online.findIndex(userr => userr.id == socket.id)]
+		socket.to(userr.room).emit('chat-msg', msg)
 	})
 
 	socket.on('disconnect', () => {

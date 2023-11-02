@@ -22,10 +22,15 @@ closeSideMenu.addEventListener('click', () => {
 	removeUI(sideMenu, 'animate__fadeOutRight')
 })
 
-let chat_id = ''
+let chatActual = ''
+var user = {}
 
-socket.on('connected', chats => {
-	chats.forEach(chat => {
+socket.on('send-user', userInfo => {
+	user = userInfo
+})
+
+socket.on('send-chats', chatsInfo => {
+	chatsInfo.forEach(chat => {
 		const li = document.createElement('li')
 		const divContainer = document.createElement('div')
 		divContainer.classList.add('chat', 'chat-default')
@@ -51,13 +56,18 @@ socket.on('connected', chats => {
 	})
 })
 
-function enterChat(chatId){
-	if(chat_id !== chatId){
-		socket.emit('enter-chat', {chatId, chat_id})
-		chat_id = chatId
+function enterChat(chatToEnter){
+	const chats = {
+		toLeave: chatActual,
+		toEnter: chatToEnter
+	}
+
+	if(chatActual !== chatToEnter){
+		socket.emit('enter-chat', chats)
+		chatActual = chatToEnter
 
 		document.querySelectorAll('.chat').forEach(element => {
-			if(element.dataset.chat == `${chatId}`){
+			if(element.dataset.chat == `${chatToEnter}`){
 				element.classList.add('chat-active')
 				element.classList.remove('chat-default')
 			}else{
@@ -132,13 +142,12 @@ form.addEventListener('submit', event => {
 	event.preventDefault()
 	
 	if(input.value){
-		const date = new Date()
-		const hours = date.getHours()
-		const minutes = date.getMinutes()
+		const dateTime = new Date()
 
 		const msg = {
+			nick: user.nick,
 			message: input.value,
-			time: `${hours}:${minutes}`
+			date_time: dateTime
 		}
 
 		if(socket.emit('chat-msg', msg)){
@@ -150,7 +159,7 @@ form.addEventListener('submit', event => {
 							<p class="text-white break-words text-left">${msg.message}</p>
 						</div>
 						<div class="self-end">
-							<small class="text-neutral-300 text-[10px]">${msg.time}</small>
+							<small class="text-neutral-300 text-[10px]">${dateTime.getHours()}:${dateTime.getMinutes()}</small>
 						</div>
 					</div>
 				</div>
@@ -164,12 +173,14 @@ form.addEventListener('submit', event => {
 })
 
 socket.on('chat-msg', msg => {
+	const dateTime = new Date(msg.date_time)
+
 	chatContainer.innerHTML += `
 		<div class="max-w-sm min-w-10" data-user="strange" data-msg="msg">
-			<p class="text-zinc-500">Anônimo</p>
+			<p class="text-zinc-500">${msg.nick}</p>
 			<div class="p-1 my-1 rounded bg-red-800 flex items-center gap-x-2">
 				<div class="self-end">
-					<small class="text-neutral-300 text-[10px]">${msg.time}</small>
+					<small class="text-neutral-300 text-[10px]">${dateTime.getHours()}:${dateTime.getMinutes()}</small>
 				</div>
 				<div>
 					<p class="text-white break-words text-left">${msg.message}</p>
