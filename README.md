@@ -6,11 +6,14 @@ PapoDez é um site que haverá dois modos:
 - Bate-papo em salas
 - Conversar com alguém aleatório ("igual" um certo site ai rs)
 
---
+---
 
 ## Tecnologias
 
-Atualmente o site está usando:
+[Front-End]
+- Javascript (puro)
+- TailwindCSS
+
 [Back-End]
 - NodeJs
 - ExpressJs e seus modulos
@@ -18,7 +21,3 @@ Atualmente o site está usando:
 - Socket.io
 - MySQL
 - Javascript (puro)
-
-[Front-End]
-- Javascript (puro)
-- TailwindCSS
