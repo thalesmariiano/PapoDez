@@ -11,22 +11,24 @@
 <body>
 	<div class="w-full h-screen flex flex-col justify-center items-center bg-neutral-900">
 		<h1 class="text-white font-bold text-7xl">PAPO<span class="text-green-800">DEZ</span></h1>
-		<form action="/" method="POST">
+		<form id="login-form">
 			<div class="space-y-3 text-center mt-10">
-				<p id="inputs-error" class="text-red-500 monospace text-sm hidden">Usuário/Senha incorretos.</p>
-				<input id="name-input" class="bg-neutral-500 placeholder:text-neutral-700 placeholder:italic text-white border border-white pl-2 pr-5 py-1 rounded" type="text" name="nickname" placeholder="Seu nome/apelido" autocomplete="off" required> <br>
-				<input id="password-input" class="bg-neutral-500 placeholder:text-neutral-700 placeholder:italic text-white border border-white pl-2 pr-5 py-1 rounded" type="password" name="password" placeholder="Sua Senha" required> <br>
+				<p id="form-error" class="text-red-500 monospace text-sm hidden">Usuário/Senha incorretos.</p>
+				<input id="name-input" class="form-inputs bg-neutral-500 placeholder:text-neutral-700 placeholder:italic text-white border border-white pl-2 pr-5 py-1 rounded" type="text" name="nickname" placeholder="Seu nome/apelido" autocomplete="off"> <br>
+				<input id="password-input" class="form-inputs bg-neutral-500 placeholder:text-neutral-700 placeholder:italic text-white border border-white pl-2 pr-5 py-1 rounded" type="password" name="password" placeholder="Sua Senha"> <br>
 				<button class="w-full py-1 text-lg text-white font-semibold bg-green-800 border border-green-700 rounded hover:bg-green-700 transition-all">Entrar</button>
 			</div>
 		</form>
 		<div class="my-5 w-80 h-0.5 bg-neutral-700 rounded"></div>
 		<div>
-			<button class="px-5 py-1 text-lg text-neutral-400 font-semibold bg-green-950 border border-green-900 rounded hover:text-white hover:bg-green-700 transition-all">Entrar sem login</button>
+			<a href="#" class="px-5 py-1 text-lg text-neutral-400 font-semibold bg-green-950 border border-green-900 rounded hover:text-white hover:bg-green-700 transition-all">Entrar sem login</a>
 		</div>
 		<div class="mt-5 text-center">
 			<p class="text-neutral-500 text-sm">Este é um projeto em desenvolvimento. <br> Encontrou algum bug? <a class="underline text-neutral-400" href="#">Reporte aqui!</a></p>
 			<p class="text-neutral-500 text-sm">NÃO compartilhe informações pessoais!</p>
 		</div>
 	</div>
+
+	<script src="/static/js/login_validator.js"></script>
 </body>
 </html>
