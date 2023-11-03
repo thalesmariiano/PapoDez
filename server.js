@@ -2,22 +2,13 @@ import express from 'express'
 import http from "http"
 import bodyParser from 'body-parser'
 import session from 'express-session'
+import md5 from 'md5'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { Server } from 'Socket.io'
 
-// import connection from './connection.js'
-
-// const getMessagens = msgsCount => {
-// 	connection.query(
-// 		'SELECT * FROM `bate-papo-geral` LIMIT ' + msgsCount,
-// 		(err, results, fields) => {
-// 			console.log(results)
-// 		}
-// 	)
-// }
-
-// // getMessagens(1)
+import isAuthenticated from './middlewares/auth.js'
+import connection from './connection.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,18 +44,56 @@ const chats = [
 	},
 ]
 
+app.use(session({
+	secret: 'teste',
+	resave: false,
+	saveUninitialized: true,
+}))
+
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use("/static", express.static('public/arquivos'))
 
 app.get('/', (req, res) => {
+	req.session.destroy(err => {})
+
 	res.sendFile(__dirname + '/public/index.html')
 })
 
-app.get('/chat', (req, res) => {
-	if(!user.nick || user.nick == ' ') res.redirect('/')
-
+app.get('/chat', isAuthenticated,(req, res) => {
 	res.sendFile(__dirname + '/public/chat.html')
+})
+
+app.post('/login', (req, res) => {
+
+	const SQL_user = 'SELECT name FROM `users` WHERE `name` = ' + `"${req.body.nickname}"` 
+
+	connection.query(SQL_user, (err, results, fields) => {
+			if(results.length){
+				const SQL_full = 'SELECT * FROM `users` WHERE `name` = ' + `"${req.body.nickname}"` + 'AND `password` = ' + `"${md5(req.body.password)}"`
+
+				connection.query(SQL_full, (err, results, fields) => {
+					if(results.length){
+						req.session.regenerate(err => {
+							if(err) next()
+
+							req.session.user = results[0].id
+
+							req.session.save(function (err) {
+								if (err) return next(err)
+								res.status(200).json({error: false, message: 'Logado com sucesso', url: '/chat'})
+							})
+						})
+
+					}else{
+						res.status(200).json({error: true, message: 'Usuario/senha incorretos.'})
+					}
+				})
+			}else{
+				res.status(200).json({error: true, message: 'Usuario não existe.'})
+			}
+		}
+	)
 })
 
 app.post('/', (req, res) => {
