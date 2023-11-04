@@ -1,6 +1,6 @@
-import mysql from 'mysql2'
+import mysql from 'mysql2/promise'
 
-export default mysql.createConnection({
+export default mysql.createPool({
 	host: 'localhost',
 	user: 'root',
 	database: 'papodez-db',
