@@ -2,13 +2,12 @@ import express from 'express'
 import http from "http"
 import bodyParser from 'body-parser'
 import session from 'express-session'
-import md5 from 'md5'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { Server } from 'Socket.io'
 
 import isAuthenticated from './middlewares/auth.js'
-import connection from './connection.js'
+import UserController from './controllers/UserController.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -64,36 +63,23 @@ app.get('/chat', isAuthenticated,(req, res) => {
 	res.sendFile(__dirname + '/public/chat.html')
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
+	const loginResquest = await UserController().login(req.body)
 
-	const SQL_user = 'SELECT name FROM `users` WHERE `name` = ' + `"${req.body.nickname}"` 
+	if(!loginResquest.error){
+		req.session.regenerate(err => {
+			if(err) next()
 
-	connection.query(SQL_user, (err, results, fields) => {
-			if(results.length){
-				const SQL_full = 'SELECT * FROM `users` WHERE `name` = ' + `"${req.body.nickname}"` + 'AND `password` = ' + `"${md5(req.body.password)}"`
+			req.session.user = loginResquest.data
 
-				connection.query(SQL_full, (err, results, fields) => {
-					if(results.length){
-						req.session.regenerate(err => {
-							if(err) next()
-
-							req.session.user = results[0].id
-
-							req.session.save(function (err) {
-								if (err) return next(err)
-								res.status(200).json({error: false, message: 'Logado com sucesso', url: '/chat'})
-							})
-						})
-
-					}else{
-						res.status(200).json({error: true, message: 'Usuario/senha incorretos.'})
-					}
-				})
-			}else{
-				res.status(200).json({error: true, message: 'Usuario não existe.'})
-			}
-		}
-	)
+			req.session.save(function (err) {
+			if (err) return next(err)
+				res.status(200).json(loginResquest.log)
+			})
+		})
+	}else{
+		res.status(200).json(loginResquest)
+	}
 })
 
 app.post('/', (req, res) => {
