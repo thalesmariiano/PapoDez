@@ -58,26 +58,20 @@ form.addEventListener('submit', e => {
 	if(!validar.errors.length){
 		errorText.classList.add('hidden')
 
-		fetch('http://localhost:3072/login', {
-			method: 'POST',
-			mode: 'cors',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: new URLSearchParams(new FormData(form))
-		}).then(response => response.json())
-		.then(data => {
-			if(!data.error){
-				if(data.url){
-					window.location.replace(data.url)
-				}
-			}else{
-				errorText.innerHTML = data.message
-				errorText.classList.remove('hidden')
+		const data = {
+			nickname: document.querySelector('[name="nickname"]').value,
+			password: document.querySelector('[name="password"]').value
+		}
+
+		axios.post('http://localhost:3072/login', data)
+		.then(({data}) => {
+			if(data.url){
+				window.location.replace(data.url)
 			}
 		})
-		.catch(err => {
-			console.error('Erro: ' + err)
+		.catch(({response}) => {
+			errorText.innerHTML = response.data.message
+			errorText.classList.remove('hidden')
 		})
 	}
 })
