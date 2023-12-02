@@ -25,7 +25,7 @@ const users_online = []
 
 const user = {
 	id: '',
-	nick: '',
+	name: '',
 	room: '',
 }
 
@@ -54,12 +54,15 @@ app.use(bodyParser.json())
 app.use("/static", express.static('public/arquivos'))
 
 app.get('/', (req, res) => {
-	req.session.destroy(err => {})
+	if(req.session.user){
+		res.redirect('/chat')
+		return
+	}
 
 	res.sendFile(__dirname + '/public/index.html')
 })
 
-app.get('/chat', isAuthenticated,(req, res) => {
+app.get('/chat', isAuthenticated, (req, res) => {
 	res.sendFile(__dirname + '/public/chat.html')
 })
 
@@ -78,7 +81,7 @@ app.post('/login', async (req, res) => {
 			})
 		})
 	}else{
-		res.status(200).json(loginResquest)
+		res.status(401).json(loginResquest)
 	}
 })
 
