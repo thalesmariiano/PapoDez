@@ -14,7 +14,7 @@ export default function(){
 			if(fullQuery[0].length){
 				return {
 					data: fullQuery[0],
-					log: {error: false, message: 'Logado com sucesso', url: '/chat'}
+					log: {message: 'Logado com sucesso', url: '/chat'}
 				}
 			}else{
 				return {error: true, message: 'Usuario/senha incorretos.'}
