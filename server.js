@@ -2,6 +2,7 @@ import express from 'express'
 import http from "http"
 import bodyParser from 'body-parser'
 import session from 'express-session'
+import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { Server } from 'Socket.io'
@@ -21,13 +22,6 @@ const findUser = userId => users_online.findIndex(user => user.id == userId)
 const removeUser = userId => users_online.splice(userId, 1)
 
 const chatNSP = io.of('/chat')
-const users_online = []
-
-const user = {
-	id: '',
-	name: '',
-	room: '',
-}
 
 const chats = [
 	{
@@ -43,11 +37,18 @@ const chats = [
 	},
 ]
 
-app.use(session({
+const sessionMiddleware = session({
 	secret: 'teste',
 	resave: false,
-	saveUninitialized: true,
+	saveUninitialized: true
+})
+
+app.use(cors({
+	origin: true,
+	credentials: true
 }))
+app.use(sessionMiddleware)
+io.engine.use(sessionMiddleware)
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -85,47 +86,24 @@ app.post('/login', async (req, res) => {
 	}
 })
 
-app.post('/', (req, res) => {
-	const { nickname } = req.body
-	user.nick = nickname ? nickname : `Anônimo${Math.floor(Math.random() * 100)}`
-	res.redirect('/chat')
-})
-
 chatNSP.on('connection', (socket) => {
-	user.id = socket.id
+	const request = socket.request.session
 
 	socket.emit('send-chats', chats)
-	socket.emit('send-user', user)
-	users_online.push(user)
 
-	socket.on('enter-chat', chat => {
-		const userToEnter = users_online[users_online.findIndex(u => u.id == socket.id)]
-		userToEnter.room = chat.toEnter
-		console.log(userToEnter)
-		socket.join(chat.toEnter)
-		socket.leave(chat.toLeave)
-
-		socket.emit('chat-info', chats.find(chat => chat.id == chat.toEnter))
+	socket.on('leave-room', chatId => {
+		socket.leave(chatId)
 	})
 
-	// socket.on('user-config', user => {
-	// 	user.name = userName
-	// 	users_online.push(user)
-	// 	chatNSP.emit('users-online', users_online)
-	// })
+	socket.on('enter-chat', chatId => {
+		socket.join(chatId)
+		socket.emit('chat-info', chats.find(chat => chat.id == chatId))
+	})
 
 	socket.on('chat-msg', msg => {
-		const userr = users_online[users_online.findIndex(userr => userr.id == socket.id)]
-		socket.to(userr.room).emit('chat-msg', msg)
+		msg.nick = request.user[0].name
+		socket.to(msg.room).emit('chat-msg', msg)
 	})
-
-	socket.on('disconnect', () => {
-		const user = findUser(socket.id)
-		removeUser(user)
-
-		chatNSP.emit('users-online', users_online)
-	})
-
 })
 
 server.listen(port, () => {

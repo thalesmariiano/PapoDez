@@ -22,12 +22,7 @@ closeSideMenu.addEventListener('click', () => {
 	removeUI(sideMenu, 'animate__fadeOutRight')
 })
 
-let chatActual = ''
-var user = {}
-
-socket.on('send-user', userInfo => {
-	user = userInfo
-})
+let user_chat = ''
 
 socket.on('send-chats', chatsInfo => {
 	chatsInfo.forEach(chat => {
@@ -56,24 +51,24 @@ socket.on('send-chats', chatsInfo => {
 	})
 })
 
-function enterChat(chatToEnter){
-	const chats = {
-		toLeave: chatActual,
-		toEnter: chatToEnter
-	}
+function enterChat(chatId){
+	if(user_chat) socket.emit('leave-room', user_chat)
 
-	if(chatActual !== chatToEnter){
-		socket.emit('enter-chat', chats)
-		chatActual = chatToEnter
+	const chat = document.querySelector(`[data-chat='${chatId}']`)
+	const classArray = Array(...chat.classList)
+	
+	if(!classArray.includes('chat-active')){
+		socket.emit('enter-chat', chatId)
+		user_chat = chatId
+
+		chat.classList.add('chat-active')
+		chat.classList.remove('chat-default')
 
 		document.querySelectorAll('.chat').forEach(element => {
-			if(element.dataset.chat == `${chatToEnter}`){
-				element.classList.add('chat-active')
-				element.classList.remove('chat-default')
-			}else{
-				element.classList.remove('chat-active')
-				element.classList.add('chat-default')
-			}
+			if(element.dataset.chat == chatId) return
+
+			element.classList.remove('chat-active')
+			element.classList.add('chat-default')
 		})
 		chatContainer.innerHTML = ''
 	}
@@ -83,61 +78,6 @@ socket.on('chat-info', info => {
 	document.querySelector('#chat-name').innerHTML = info.name
 })
 
-// socket.on('user-on', userId => {
-// 	chatContainer.innerHTML += `
-// 		<div class="w-full text-center">
-// 			<p class="text-zinc-500 text-sm">Usuário
-// 				<span class="text-zinc-600">
-// 					${userId}
-// 				</span>
-// 				conectado.
-// 			</p>	
-// 		</div>
-		
-// 	`
-// })
-
-socket.on('users-online', users => {
-	usersCount.innerHTML = `${users.length} online`
-})
-
-// 	usersList.innerHTML = ' '
-// 	users.forEach(u => {
-// 		if(user.id !== u.id){
-// 			const userName = u.name ? u.name : u.id
-// 			usersList.innerHTML += `
-// 				<li class="text-zinc-300 px-2 py-1">
-// 					<span class="text-zinc-400">User:</span>
-// 					${userName}
-// 				</li>
-// 			`
-// 		}else{
-// 			meContainer.innerHTML = `
-// 			<div class="px-2 py-4 bg-green-950 border-b-2 border-green-900">
-// 				<p class="text-zinc-300">
-// 					<span class="text-zinc-400">Você:</span>
-// 					${u.name ? u.name : u.id}
-// 				</p>
-// 			</div>
-// 			`
-// 		}
-// 	})
-// })
-
-// socket.on('user-off', userId => {
-// 	chatContainer.innerHTML += `
-// 		<div class="w-full text-center">
-// 			<p class="text-zinc-500 text-sm">Usuário
-// 				<span class="text-zinc-600">
-// 					${userId}
-// 				</span>
-// 				desconectado.
-// 			</p>
-// 		</div>
-		
-// 	`
-// })
-
 form.addEventListener('submit', event => {
 	event.preventDefault()
 	
@@ -145,8 +85,9 @@ form.addEventListener('submit', event => {
 		const dateTime = new Date()
 
 		const msg = {
-			nick: user.nick,
+			nick: '', // nick vai ser passado na session no server
 			message: input.value,
+			room: user_chat,
 			date_time: dateTime
 		}
 
