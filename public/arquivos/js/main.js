@@ -24,6 +24,8 @@ closeSideMenu.addEventListener('click', () => {
 
 let user_chat = ''
 
+socket.on('redirect', router => window.location.replace(router))
+
 socket.on('send-chats', chatsInfo => {
 	chatsInfo.forEach(chat => {
 		const li = document.createElement('li')

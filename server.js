@@ -89,6 +89,11 @@ app.post('/login', async (req, res) => {
 chatNSP.on('connection', (socket) => {
 	const request = socket.request.session
 
+	if(!request.user){
+		socket.emit('redirect', '/')
+		return
+	}
+
 	socket.emit('send-chats', chats)
 
 	socket.on('leave-room', chatId => {
