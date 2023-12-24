@@ -45,10 +45,12 @@ const sessionMiddleware = session({
 })
 
 app.use(cors({
-	origin: '*',
+	origin: 'http://papodez.kinghost.net',
 	credentials: true,
-	optionSuccessStatus:200,
+	preflightContinue: true,
+	optionsSuccessStatus: 200
 }))
+
 app.use(sessionMiddleware)
 io.engine.use(sessionMiddleware)
 
