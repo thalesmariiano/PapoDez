@@ -8,7 +8,7 @@ import session from 'express-session'
 import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { Server } from 'Socket.io'
+import { Server } from 'socket.io'
 
 import isAuthenticated from './middlewares/auth.js'
 import UserController from './controllers/UserController.js'
