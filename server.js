@@ -45,8 +45,9 @@ const sessionMiddleware = session({
 })
 
 app.use(cors({
-	origin: true,
-	credentials: true
+	origin: '*',
+	credentials: true,
+	optionSuccessStatus:200,
 }))
 app.use(sessionMiddleware)
 io.engine.use(sessionMiddleware)
