@@ -1,5 +1,5 @@
-import dotenv from 'dotenv'
-dotenv.config()
+// import dotenv from 'dotenv'
+// dotenv.config()
 
 import express from 'express'
 import http from "http"
@@ -19,7 +19,6 @@ const __dirname = path.dirname(__filename);
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server)
-const port = 3072
 
 const chatNSP = io.of('/chat')
 
@@ -133,7 +132,6 @@ chatNSP.on('connection', (socket) => {
 	})
 })
 
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT_SERVER, () => {
 	console.log(`App iniciado`)
-	console.log(process.env.PORT)
 })
