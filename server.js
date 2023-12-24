@@ -132,6 +132,6 @@ chatNSP.on('connection', (socket) => {
 	})
 })
 
-server.listen(process.env.PORT_SERVER, () => {
+server.listen(process.env.PORT, () => {
 	console.log(`App iniciado`)
 })
