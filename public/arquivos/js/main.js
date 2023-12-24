@@ -6,7 +6,9 @@ const form = document.querySelector('form')
 const input = document.querySelector('[name=user-msg]')
 const chatContainer = document.querySelector('#chat-container')
 
+const chatName = document.querySelector('#chat-name')
 const usersCount = document.querySelector('#users-count')
+
 const meContainer = document.querySelector('#me-container')
 const chatsList = document.querySelector('#chats-list')
 
@@ -54,13 +56,13 @@ socket.on('send-chats', chatsInfo => {
 })
 
 function enterChat(chatId){
-	if(user_chat) socket.emit('leave-room', user_chat)
+	if(user_chat) socket.emit('exit-room', user_chat)
 
 	const chat = document.querySelector(`[data-chat='${chatId}']`)
 	const classArray = Array(...chat.classList)
 	
 	if(!classArray.includes('chat-active')){
-		socket.emit('enter-chat', chatId)
+		socket.emit('enter-room', chatId)
 		user_chat = chatId
 
 		chat.classList.add('chat-active')
@@ -76,8 +78,9 @@ function enterChat(chatId){
 	}
 }
 
-socket.on('chat-info', info => {
-	document.querySelector('#chat-name').innerHTML = info.name
+socket.on('chat-info', chat => {
+	chatName.innerHTML = chat.name
+	usersCount.innerHTML = `${chat.users_online.length} online`
 })
 
 form.addEventListener('submit', event => {

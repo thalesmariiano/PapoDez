@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import express from 'express'
 import http from "http"
 import bodyParser from 'body-parser'
@@ -18,9 +21,6 @@ const server = http.createServer(app)
 const io = new Server(server)
 const port = 3072
 
-const findUser = userId => users_online.findIndex(user => user.id == userId)
-const removeUser = userId => users_online.splice(userId, 1)
-
 const chatNSP = io.of('/chat')
 
 const chats = [
@@ -36,6 +36,8 @@ const chats = [
 
 	},
 ]
+
+
 
 const sessionMiddleware = session({
 	secret: 'teste',
@@ -96,13 +98,33 @@ chatNSP.on('connection', (socket) => {
 
 	socket.emit('send-chats', chats)
 
-	socket.on('leave-room', chatId => {
+	socket.on('enter-room', chatId => {
+		socket.join(chatId)
+
+		const chat = chats.find(chat => chat.id === chatId)
+		if(chat){
+			chat.users_online.push(socket.id)
+			socket.emit('chat-info', chat)
+		}
+	})
+	socket.on('exit-room', chatId => {
 		socket.leave(chatId)
+
+		const chat = chats.find(chat => chat.id === chatId)
+		if(chat){
+			const socketIndex = chat.users_online.findIndex(userSocket => userSocket === socket.id)
+			chat.users_online.splice(socketIndex, 1)
+		}
 	})
 
-	socket.on('enter-chat', chatId => {
-		socket.join(chatId)
-		socket.emit('chat-info', chats.find(chat => chat.id == chatId))
+	chatNSP.adapter.on('join-room', (room, socketId) => {
+		const chat = chats.find(chat => chat.id === room)
+		socket.to(room).emit('chat-info', chat)
+	})
+	
+	chatNSP.adapter.on('leave-room', (room, socketId) => {
+		const chat = chats.find(chat => chat.id === room)
+		socket.to(room).emit('chat-info', chat)
 	})
 
 	socket.on('chat-msg', msg => {
@@ -111,6 +133,7 @@ chatNSP.on('connection', (socket) => {
 	})
 })
 
-server.listen(port, () => {
-	console.log(`App iniciado na porta ${port}`)
+server.listen(process.env.PORT, () => {
+	console.log(`App iniciado`)
+	console.log(process.env.PORT)
 })
