@@ -1,5 +1,4 @@
-import md5 from 'md5'
-import connection from '../connection.js'
+
 
 export default function(){
 

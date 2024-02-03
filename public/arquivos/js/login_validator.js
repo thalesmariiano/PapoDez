@@ -63,10 +63,10 @@ form.addEventListener('submit', e => {
 			password: document.querySelector('[name="password"]').value
 		}
 
-		axios.post('http://papodez.kinghost.net/login', data)
+		axios.post('http://localhost:21062/login', data)
 		.then(({data}) => {
-			if(data.url){
-				window.location.replace(data.url)
+			if(data.log.url){
+				window.location.replace(data.log.url)
 			}
 		})
 		.catch(({response}) => {

@@ -1,3 +1,5 @@
+
+import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -12,6 +14,25 @@ import { Server } from 'socket.io'
 
 import isAuthenticated from './middlewares/auth.js'
 import UserController from './controllers/UserController.js'
+
+import UserModel from './schemas/userSchema.js'
+
+
+// const newUser = new UserModel({
+// 	name: 'Thales Mariano',
+// 	username: 'thalesmariiano',
+// 	email: 'thales.mariano125@gmail.com',
+// 	password: 'thales123'
+// })
+
+// newUser.save()
+// 	.then(res => {
+// 		console.log(res)
+// 	})
+// 	.catch(err => {
+// 		console.log(err)
+// 	})
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,10 +66,8 @@ const sessionMiddleware = session({
 })
 
 app.use(cors({
-	origin: 'http://papodez.kinghost.net',
-	credentials: true,
-	preflightContinue: true,
-	optionsSuccessStatus: 200
+	origin: true,
+	credentials: true
 }))
 
 app.use(sessionMiddleware)
@@ -72,22 +91,31 @@ app.get('/chat', isAuthenticated, (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-	const loginResquest = await UserController().login(req.body)
 
-	if(!loginResquest.error){
-		req.session.regenerate(err => {
-			if(err) next()
+	const userExist = await UserModel.findOne({username: req.body.nickname})
+	if(!userExist){
+		return res.status(401).json({message: 'Usuário não existe.'})
+	}
 
-			req.session.user = loginResquest.data
+	const user = await UserModel.findOne({username: req.body.nickname, password: req.body.password})
+	if(!user){
+		return res.status(401).json({message: 'Senha incorreta.'})
+	}
 
-			req.session.save(function (err) {
-			if (err) return next(err)
-				res.status(200).json(loginResquest.log)
+	req.session.regenerate(err => {
+		if(err) next()
+
+		req.session.user = user
+
+		req.session.save(function(err){
+		if(err) return next(err)
+			res.status(200).json({
+				data: user,
+				log: {message: 'Logado com sucesso', url: '/chat'}
 			})
 		})
-	}else{
-		res.status(401).json(loginResquest)
-	}
+	})
+
 })
 
 chatNSP.on('connection', (socket) => {
@@ -130,11 +158,16 @@ chatNSP.on('connection', (socket) => {
 	})
 
 	socket.on('chat-msg', msg => {
-		msg.nick = request.user[0].name
+		msg.nick = request.user.name
 		socket.to(msg.room).emit('chat-msg', msg)
 	})
 })
 
 server.listen(process.env.PORT, () => {
-	console.log(`App iniciado`)
+	console.log(`App iniciado na porta: ${process.env.PORT}`)
+
+	mongoose.set('strictQuery', true);
+		mongoose.connect(process.env.DB_URI).then(() => {
+		console.log('A conexão com o banco de dados foi estabelecida!');
+	});
 })
