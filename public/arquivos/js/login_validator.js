@@ -65,9 +65,7 @@ form.addEventListener('submit', e => {
 
 		axios.post('http://localhost:21062/login', data)
 		.then(({data}) => {
-			if(data.log.url){
-				window.location.replace(data.log.url)
-			}
+			window.location.replace('/chat')
 		})
 		.catch(({response}) => {
 			errorText.innerHTML = response.data.message

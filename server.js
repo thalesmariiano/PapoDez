@@ -17,9 +17,6 @@ import { Server } from 'socket.io'
 import isAuthenticated from './middlewares/auth.js'
 import UserController from './controllers/UserController.js'
 
-import UserModel from './schemas/userSchema.js'
-import ChatModel from './schemas/chatSchema.js'
-
 // const newUser = new UserModel({
 // 	name: 'Thales Mariano',
 // 	username: 'thalesmariiano',
@@ -108,33 +105,7 @@ app.get('/chat', isAuthenticated, (req, res) => {
 	res.sendFile(__dirname + '/public/chat.html')
 })
 
-app.post('/login', async (req, res) => {
-
-	const userExist = await UserModel.findOne({username: req.body.nickname})
-	if(!userExist){
-		return res.status(401).json({message: 'Usuário não existe.'})
-	}
-
-	const user = await UserModel.findOne({username: req.body.nickname, password: req.body.password})
-	if(!user){
-		return res.status(401).json({message: 'Senha incorreta.'})
-	}
-
-	req.session.regenerate(err => {
-		if(err) next()
-
-		req.session.user = user
-
-		req.session.save(function(err){
-		if(err) return next(err)
-			res.status(200).json({
-				data: user,
-				log: {message: 'Logado com sucesso', url: '/chat'}
-			})
-		})
-	})
-
-})
+app.post('/login', (req, res) => UserController.auth(req, res))
 
 chatNSP.on('connection', async (socket) => {
 	const request = socket.request.session
