@@ -16,6 +16,7 @@ import { Server } from 'socket.io'
 
 import isAuthenticated from './middlewares/auth.js'
 import UserController from './controllers/UserController.js'
+import ChatController from './controllers/ChatController.js'
 
 import chat from './chat.js'
 
@@ -55,6 +56,8 @@ app.get('/', (req, res) => {
 app.get('/chat', isAuthenticated, (req, res) => {
 	res.sendFile(__dirname + '/public/chat.html')
 })
+
+app.get('/chats', isAuthenticated, (req, res) => ChatController.getAll(req, res))
 
 app.post('/login', (req, res) => UserController.auth(req, res))
 

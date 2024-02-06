@@ -1,4 +1,4 @@
-import ChatModel from './models/ChatModel.js'
+import ChatController from './controllers/ChatController.js'
 
 export default async function(socket, chatNSP){
 	const request = socket.request.session
@@ -8,44 +8,23 @@ export default async function(socket, chatNSP){
 		return
 	}
 
-	const chats = await ChatModel.find({})
-	if(!chats) return
+	socket.on('enter-room', room => socket.join(room))
+	socket.on('exit-room', room => socket.leave(room))
 
-	socket.emit('send-chats', chats)		
-
-	socket.on('enter-room', async chatId => {
-		socket.join(chatId)
-
-			// const chat = await ChatModel.find({_id: chatId})	
-			// if(chat){
-			// 	await ChatModel.findOneAndUpdate(
-			// 		{ _id: chatId },
-			// 		{ $push: {users_online: socket.id}},
-			// 		{new: true}
-			// 	).then(res => {
-			// 		socket.emit('chat-info', res)
-			// 	})
-			// 	.catch(err => console.log(err))
-			// }
-	})
-	socket.on('exit-room', chatId => {
-		socket.leave(chatId)
-
-		const chat = chats.find(chat => chat.id === chatId)
+	chatNSP.adapter.on('join-room', async (room, socketId) => {
+		const chat = await ChatController.get(room)
 		if(chat){
-			const socketIndex = chat.users_online.findIndex(userSocket => userSocket === socket.id)
-			chat.users_online.splice(socketIndex, 1)
+			await ChatController.joinUser(room, socketId)
+			socket.emit('chat-info', chat)			
 		}
 	})
-
-	chatNSP.adapter.on('join-room', (room, socketId) => {
-		const chat = chats.find(chat => chat.id === room)
-		socket.to(room).emit('chat-info', chat)
-	})
 		
-	chatNSP.adapter.on('leave-room', (room, socketId) => {
-		const chat = chats.find(chat => chat.id === room)
-		socket.to(room).emit('chat-info', chat)
+	chatNSP.adapter.on('leave-room', async (room, socketId) => {
+		const chat = await ChatController.get(room)
+		if(chat){
+			await ChatController.exitUser(room, socketId)
+			// socket.to(room).emit('users-online', c.users_online.length)			
+		}
 	})
 
 	socket.on('chat-msg', msg => {

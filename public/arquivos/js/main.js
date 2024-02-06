@@ -28,7 +28,15 @@ let user_chat = ''
 
 socket.on('redirect', router => window.location.replace(router))
 
-socket.on('send-chats', chatsInfo => {
+axios.get('http://localhost:21062/chats')
+	.then(({data}) => {
+		setChats(data)
+	})
+	.catch((err) => {
+		console.log(err)
+	})
+
+function setChats(chatsInfo){
 	chatsInfo.forEach(chat => {
 		const li = document.createElement('li')
 		const divContainer = document.createElement('div')
@@ -53,7 +61,7 @@ socket.on('send-chats', chatsInfo => {
 		li.appendChild(divContainer)
 		chatsList.appendChild(li)
 	})
-})
+}
 
 function enterChat(chatId){
 	if(user_chat) socket.emit('exit-room', user_chat)

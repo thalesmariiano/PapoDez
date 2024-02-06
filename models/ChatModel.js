@@ -14,7 +14,6 @@ const chatSchema = new mongoose.Schema({
 		type: Number,
 		required: true
 	}
-
 })
 
 export default mongoose.model('chats', chatSchema)
