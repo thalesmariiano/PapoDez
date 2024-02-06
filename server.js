@@ -17,6 +17,8 @@ import { Server } from 'socket.io'
 import isAuthenticated from './middlewares/auth.js'
 import UserController from './controllers/UserController.js'
 
+import chat from './chat.js'
+
 // const newUser = new UserModel({
 // 	name: 'Thales Mariano',
 // 	username: 'thalesmariiano',
@@ -55,8 +57,6 @@ const __dirname = path.dirname(__filename);
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server)
-
-const chatNSP = io.of('/chat')
 
 // const chats = [
 // 	{
@@ -107,59 +107,8 @@ app.get('/chat', isAuthenticated, (req, res) => {
 
 app.post('/login', (req, res) => UserController.auth(req, res))
 
-chatNSP.on('connection', async (socket) => {
-	const request = socket.request.session
-
-	if(!request.user){
-		socket.emit('redirect', '/')
-		return
-	}
-
-	const chats = await ChatModel.find({})
-	if(!chats) return
-
-	socket.emit('send-chats', chats)		
-
-	socket.on('enter-room', async chatId => {
-		socket.join(chatId)
-
-		// const chat = await ChatModel.find({_id: chatId})	
-		// if(chat){
-		// 	await ChatModel.findOneAndUpdate(
-		// 		{ _id: chatId },
-		// 		{ $push: {users_online: socket.id}},
-		// 		{new: true}
-		// 	).then(res => {
-		// 		socket.emit('chat-info', res)
-		// 	})
-		// 	.catch(err => console.log(err))
-		// }
-	})
-	socket.on('exit-room', chatId => {
-		socket.leave(chatId)
-
-		const chat = chats.find(chat => chat.id === chatId)
-		if(chat){
-			const socketIndex = chat.users_online.findIndex(userSocket => userSocket === socket.id)
-			chat.users_online.splice(socketIndex, 1)
-		}
-	})
-
-	chatNSP.adapter.on('join-room', (room, socketId) => {
-		const chat = chats.find(chat => chat.id === room)
-		socket.to(room).emit('chat-info', chat)
-	})
-	
-	chatNSP.adapter.on('leave-room', (room, socketId) => {
-		const chat = chats.find(chat => chat.id === room)
-		socket.to(room).emit('chat-info', chat)
-	})
-
-	socket.on('chat-msg', msg => {
-		msg.nick = request.user.name
-		socket.to(msg.room).emit('chat-msg', msg)
-	})
-})
+const chatNSP = io.of('/chat')
+chatNSP.on('connection', socket => chat(socket, chatNSP))
 
 server.listen(process.env.PORT, () => {
 	console.log(`App iniciado na porta: ${process.env.PORT}`)
