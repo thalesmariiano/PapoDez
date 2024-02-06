@@ -3,6 +3,8 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 dotenv.config()
 
+import db_connection from './db/connection.js'
+
 import express from 'express'
 import http from "http"
 import bodyParser from 'body-parser'
@@ -190,9 +192,5 @@ chatNSP.on('connection', async (socket) => {
 
 server.listen(process.env.PORT, () => {
 	console.log(`App iniciado na porta: ${process.env.PORT}`)
-
-	mongoose.set('strictQuery', true);
-		mongoose.connect(process.env.DB_URI).then(() => {
-		console.log('A conexão com o banco de dados foi estabelecida!');
-	});
+	db_connection()
 })
