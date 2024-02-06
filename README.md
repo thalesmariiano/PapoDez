@@ -22,7 +22,7 @@ Provalmente o código está feio, mas como falei ali em cima, foi idealizado par
 [Back-End]
 - NodeJs
 - ExpressJs e seus modulos
-- node-MySQL²
+- Mongoose
 - Socket.io
-- MySQL
+- MongoDB
 - Javascript (puro)
