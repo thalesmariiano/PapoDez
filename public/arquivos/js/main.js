@@ -33,7 +33,7 @@ socket.on('send-chats', chatsInfo => {
 		const li = document.createElement('li')
 		const divContainer = document.createElement('div')
 		divContainer.classList.add('chat', 'chat-default')
-		divContainer.dataset.chat = chat.id
+		divContainer.dataset.chat = chat._id
 
 		divContainer.innerHTML = `
 			<div class="flex items-center">
@@ -48,7 +48,7 @@ socket.on('send-chats', chatsInfo => {
 			</button> -->
 		`
 
-		divContainer.addEventListener('click', () => enterChat(chat.id))
+		divContainer.addEventListener('click', () => enterChat(chat._id))
 
 		li.appendChild(divContainer)
 		chatsList.appendChild(li)

@@ -16,7 +16,7 @@ import isAuthenticated from './middlewares/auth.js'
 import UserController from './controllers/UserController.js'
 
 import UserModel from './schemas/userSchema.js'
-
+import ChatModel from './schemas/chatSchema.js'
 
 // const newUser = new UserModel({
 // 	name: 'Thales Mariano',
@@ -33,6 +33,22 @@ import UserModel from './schemas/userSchema.js'
 // 		console.log(err)
 // 	})
 
+// const newChat = new ChatModel({
+// 	name: 'Papo 10',
+// 	users_online: [],
+// 	max_users: 10,
+
+// })
+
+// newChat.save()
+// 	.then(res => {
+// 		console.log(res)
+// 	})
+// 	.catch(err => {
+// 		console.log(err)
+// 	})
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,19 +59,19 @@ const io = new Server(server)
 
 const chatNSP = io.of('/chat')
 
-const chats = [
-	{
-		id: 'chat-1',
-		name: 'Bate-Papo',
-		users_online: []
-	},
-	{
-		id: 'chat-2',
-		name: 'Papo dos cria',
-		users_online: []
+// const chats = [
+// 	{
+// 		id: 'chat-1',
+// 		name: 'Bate-Papo',
+// 		users_online: []
+// 	},
+// 	{
+// 		id: 'chat-2',
+// 		name: 'Papo dos cria',
+// 		users_online: []
 
-	},
-]
+// 	},
+// ]
 
 
 
@@ -118,7 +134,7 @@ app.post('/login', async (req, res) => {
 
 })
 
-chatNSP.on('connection', (socket) => {
+chatNSP.on('connection', async (socket) => {
 	const request = socket.request.session
 
 	if(!request.user){
@@ -126,16 +142,25 @@ chatNSP.on('connection', (socket) => {
 		return
 	}
 
-	socket.emit('send-chats', chats)
+	const chats = await ChatModel.find({})
+	if(!chats) return
 
-	socket.on('enter-room', chatId => {
+	socket.emit('send-chats', chats)		
+
+	socket.on('enter-room', async chatId => {
 		socket.join(chatId)
 
-		const chat = chats.find(chat => chat.id === chatId)
-		if(chat){
-			chat.users_online.push(socket.id)
-			socket.emit('chat-info', chat)
-		}
+		// const chat = await ChatModel.find({_id: chatId})	
+		// if(chat){
+		// 	await ChatModel.findOneAndUpdate(
+		// 		{ _id: chatId },
+		// 		{ $push: {users_online: socket.id}},
+		// 		{new: true}
+		// 	).then(res => {
+		// 		socket.emit('chat-info', res)
+		// 	})
+		// 	.catch(err => console.log(err))
+		// }
 	})
 	socket.on('exit-room', chatId => {
 		socket.leave(chatId)
